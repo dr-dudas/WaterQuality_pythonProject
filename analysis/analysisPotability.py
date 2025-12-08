@@ -6,7 +6,7 @@
 ########################################################################################################
 
 ### IMPORTS
-import analysis.data_presentation as data_presentation
+import data_presentation as data_presentation
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -18,14 +18,14 @@ import matplotlib.pyplot as plt
 
 def potability_to_ph(df: pd.DataFrame):
 
-    clean_df = data_presentation.read_and_clean_general(df)
+    clean_df = data_presentation.read_clean_general(df)
     clean_df.info()
     print(clean_df.head())
     clean_df.hist(figsize=(12,10), bins=30)
     plt.suptitle("Feature Distributions", fontsize=16)
     plt.show()
 
-potability_to_ph('..\\water_potability.csv')
+potability_to_ph('water_potability.csv')
 
 ########################################################################################################
 
