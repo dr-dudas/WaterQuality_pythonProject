@@ -16,7 +16,7 @@ import seaborn as sb
 def read_clean_general(df_file_path:str) -> pd.DataFrame:
     '''
     This functions is given the directory of a .csv file and cleans the data.
-    Removes duplicates and normalizes NaN values.    
+    Removes duplicates and normalizes NaN (aka empty values) values.    
     :param df_file_path: dataframe directory/file path
     :type df_file_path: str
     :return: cleaned dataframe
@@ -80,7 +80,10 @@ def  correlation_heatmap(df:pd.DataFrame):
     plt.title('Correlation heatmap')
     plt.show()
 
-
+# df = read_clean_general('water_potability.csv')
+# introduction_to_data(df)
+# distribution_visualization(df)
+# correlation_heatmap(df)
 ########################################################################################################
 
 #### TESTING ####
