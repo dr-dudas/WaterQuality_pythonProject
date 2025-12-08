@@ -25,7 +25,7 @@ def potability_to_ph(df: pd.DataFrame):
     plt.suptitle("Feature Distributions", fontsize=16)
     plt.show()
 
-potability_to_ph('C:\\Users\\Duss\\OneDrive\\DenmarkStudies\\SDU\\Python\\waterDataset\\water_potability.csv')
+potability_to_ph('..\\water_potability.csv')
 
 ########################################################################################################
 

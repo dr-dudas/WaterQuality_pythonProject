@@ -81,12 +81,6 @@ def  correlation_heatmap(df:pd.DataFrame):
     plt.show()
 
 
-
-df = read_clean_general('C:\\Users\\Duss\\OneDrive\\DenmarkStudies\\SDU\\Python\\waterDataset\\water_potability.csv')
-introduction_to_data(df)
-distribution_visualization(df)
-correlation_heatmap(df)
-
 ########################################################################################################
 
 #### TESTING ####
