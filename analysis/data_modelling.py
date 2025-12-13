@@ -28,15 +28,8 @@ def read_clean_general(df_file_path:str) -> pd.DataFrame:
 
     # normalizing the NaNs
     df['ph'] = df['ph'].fillna(df['ph'].mean())
-    df['Hardness'] = df['Hardness'].fillna(df['Hardness'].mean())
-    df['Solids'] = df['Solids'].fillna(df['Solids'].mean())
-    df['Chloramines'] = df['Chloramines'].fillna(df['Chloramines'].mean())
     df['Sulfate'] = df['Sulfate'].fillna(df['Sulfate'].mean())
-    df['Conductivity'] = df['Conductivity'].fillna(df['Conductivity'].mean())
-    df['Organic_carbon'] = df['Organic_carbon'].fillna(df['Organic_carbon'].mean())
     df['Trihalomethanes'] = df['Trihalomethanes'].fillna(df['Trihalomethanes'].mean())
-    df['Turbidity'] = df['Turbidity'].fillna(df['Turbidity'].mean())
-    df['Potability'] = df['Potability'].fillna(df['Potability'].median())
 
     return df
 
