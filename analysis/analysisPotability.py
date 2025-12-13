@@ -6,7 +6,7 @@
 ########################################################################################################
 
 ### IMPORTS
-import data_presentation as data_presentation
+import data_modelling
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -27,7 +27,7 @@ def potability_distribution(csv_file: str):
     :type csv_file: str
     '''
 
-    df = data_presentation.read_clean_general(csv_file)
+    df = data_modelling.read_clean_general(csv_file)
 
     plt.figure(figsize=(5, 3)) 
     sb.histplot(df['Potability'], bins=20, kde=True)  
@@ -46,7 +46,7 @@ def potability_correlations(csv_file: str):
     :param csv_file: Description
     :type csv_file: str
     '''
-    df = data_presentation.read_clean_general(csv_file)
+    df = data_modelling.read_clean_general(csv_file)
 
     non_potable = df.query("Potability == 0")
     potable = df.query("Potability == 1")
