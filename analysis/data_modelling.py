@@ -48,6 +48,17 @@ def introduction_to_data(df:pd.DataFrame):
     print(df.describe())
     print(df.info())
 
+def missing_values_summary(df: pd.DataFrame) -> pd.Series:
+    '''
+    This function returns a Series with the count of missing values for each column.
+    
+    :param df: dataframe
+    :type df: pd.DataFrame
+    :return: Series with count of missing values for each column
+    '''
+    missing_values = df.isnull().sum()
+    return missing_values
+
 def distribution_visualization(df:pd.DataFrame):
     '''
     Docstring for visualization_ph
@@ -71,6 +82,20 @@ def  correlation_heatmap(df:pd.DataFrame):
     sb.heatmap(df.corr(), annot=True, cmap='coolwarm')
     plt.title('Correlation heatmap')
     plt.show()
+
+def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Adds a column 'missing_value' to the dataframe, containing
+    the count of missing values (NaN) in each row.
+
+    param df: Dataframe
+    type df: pd.DataFrame
+    returns: pd.DataFrame: Dataframe copy with an additional 'missing_value' column,
+        with an integer value corresponding to the number of missing values for that row.
+    """
+    df = df.copy()  # avoid mutating the original dataframe
+    df["missing_value"] = df.isnull().sum(axis=1)
+    return df
 
 # df = read_clean_general('water_potability.csv')
 # introduction_to_data(df)
