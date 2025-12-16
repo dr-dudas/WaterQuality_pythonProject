@@ -99,8 +99,8 @@ def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
 
 # df = read_clean_general('water_potability.csv')
 # introduction_to_data(df)
-# distribution_visualization(df)
-# correlation_heatmap(df)
+#distribution_visualization(df)
+#correlation_heatmap(df)
 ########################################################################################################
 
 #### TESTING ####
