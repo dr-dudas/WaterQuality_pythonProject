@@ -13,18 +13,15 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-
-
 ### Your modules
 import analysis.data_modelling as dm # loading in your data_modeling.py
 import analysis.analysisMissingValues as vis_rq1 # loading in analysisMissingValues - individual analysis module
-#import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
+import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
 #import analysis.analysis_rq3 as vis_rq3 # loading in your individual analysis module
 #import analysis.analysis_rq4 as vis_rq4 # loading in your individual analysis module
 #import analysis.analysis_rq5 as vis_rq5 # loading in your individual analysis module
@@ -79,9 +76,19 @@ text_rq1_4 = (
 
 
 title_rq2 = "RQ2: How can we correlate the Potability of water with the rest of the parameters?"
-text_rq2 = "YOUR THOROUGH EXPLANATION HERE"
-fig_rq2 = None  # YOUR CODE
-rq2_plot_id = "your-plot"
+text_rq2 = (
+    "The purpose of this research question is to find if there is any correlation \n" \
+    "between the potability of the water and the rest of the parameters measured" \
+    "For starters, we've created a correlation heatmap function"
+    ""f"{dm.correlation_heatmap(df)}" \
+)
+
+text_rq2_2 = ""
+fig_rq2 = vis_rq2.boxplot_chloramines("data/water_potability.csv")  # YOUR CODE
+rq2_plot1_id = "Chloramines vs Potability boxplot"
+fig_rq1_2 = vis_rq2.boxplot_solids("data/water_potability.csv")
+rq2_plot2_id = "Solids vs Potability boxplot"
+text_rq2_3 = ""
 
 # Placeholder for more research questions
 

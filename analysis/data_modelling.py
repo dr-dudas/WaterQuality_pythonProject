@@ -7,7 +7,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sb
+import plotly.express as px
 
 ########################################################################################################
 
@@ -71,7 +71,7 @@ def distribution_visualization(df:pd.DataFrame):
     plt.suptitle('Distributions')
     plt.show()
 
-def  correlation_heatmap(df:pd.DataFrame):
+def correlation_heatmap(df:pd.DataFrame):
     '''
     Docstring for heatmap
     
@@ -79,9 +79,18 @@ def  correlation_heatmap(df:pd.DataFrame):
     :type df: pd.DataFrame
     '''
 
-    sb.heatmap(df.corr(), annot=True, cmap='coolwarm')
-    plt.title('Correlation heatmap')
-    plt.show()
+    correlation_matrix = df.corr()
+
+    fig = px.imshow(correlation_matrix,
+                    height=600,
+                    width=600,
+                    text_auto=True, 
+                    title="Correlation matrix for water data set",
+                    color_continuous_midpoint=0.0,
+                    range_color=[-1, 1]
+                    )
+
+    fig.show()
 
 def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
     """

@@ -110,6 +110,50 @@ def correlationPot_graph(csv_file: str):
 
     fig.show()
 
+def boxplot_solids(csv_file: str):
+    '''
+    Box plot that shows the comparison of potable 
+    and non-potable water against solids
+    
+    :param csv_file: Description
+    :type csv_file: str
+    '''
+
+    df = data_modelling.read_clean_general(csv_file)
+
+    fig_sulfate = px.box(
+        df,
+        x='Potability',
+        y='Sulfate',
+        color='Potability',
+        title='Sulfate vs Potability'
+    )
+    fig_sulfate.update_layout(width=500, height=600)
+    
+    fig_sulfate.show()
+
+def boxplot_chloramines(csv_file: str):
+    '''
+    Box plot that shows the comparison of potable 
+    and non-potable water against chloramines
+    
+    :param csv_file: Description
+    :type csv_file: str
+    '''
+
+    df = data_modelling.read_clean_general(csv_file)
+
+    fig_chloramines = px.box(
+        df,
+        x='Potability',
+        y='Chloramines',
+        color='Potability',
+        title='Chloramines vs Potability'
+    )
+    fig_chloramines.update_layout(width=500, height=600)
+
+    fig_chloramines.show()
+
 def t_tests(csv_file: str):
     '''
     Docstring for t_tests
@@ -126,50 +170,12 @@ def t_tests(csv_file: str):
     non_potable = df.query("Potability == 0")
     potable = df.query("Potability == 1")
 
-
-    
-
-
-def box_plots(csv_file: str):
-    '''
-    Docstring for violin_plots
-    
-    :param csv_file: Description
-    :type csv_file: str
-    '''
-    df = data_modelling.read_clean_general(csv_file)
-
-    fig_chloramines = px.box(
-        df,
-        x='Potability',
-        y='Chloramines',
-        color='Potability',
-        title='Chloramines vs Potability'
-    )
-    fig_chloramines.update_layout(width=500, height=600)
-
-    # Sulfate vs Potability
-    fig_sulfate = px.box(
-        df,
-        x='Potability',
-        y='Sulfate',
-        color='Potability',
-        title='Sulfate vs Potability'
-    )
-    fig_sulfate.update_layout(width=500, height=600)
-
-    fig_chloramines.show()
-    fig_sulfate.show()
-
-
-
 ########################################################################################################
 
 #### TESTING ####
-
-#potability_correlations('data\water_potability.csv')
-#splom_graph('data\water_potability.csv')
+potability_correlations("data/water_potability.csv")
 #correlationPot_graph('data\water_potability.csv')
-#box_plots('data\water_potability.csv')
+#splom_graph('data\water_potability.csv')
+
 
 #t_tests('data\water_potability.csv')
