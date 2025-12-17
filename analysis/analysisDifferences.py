@@ -2,8 +2,6 @@ from analysis import data_modelling as dm
 import pandas as pd
 import plotly.express as px
 
-df = pd.read_csv("water_potability_cleaned.csv")
-
 def rq_summary(df, cols, target="Potability"):
     """Grouped summary stats (count/mean/std/min/25/50/75/max) for each class."""
     return df.groupby(target)[cols].describe()
