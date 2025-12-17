@@ -69,14 +69,16 @@ def distribution_visualization(df:pd.DataFrame):
 
     df.hist(figsize=(12,10), bins=20)
     plt.suptitle('Distributions')
-    plt.show()
+    return plt
 
-def correlation_heatmap(df:pd.DataFrame):
+def correlation_heatmap(df:pd.DataFrame) -> px.imshow:
     '''
-    Docstring for heatmap
+    Docstring for correlation_heatmap
     
     :param df: Description
     :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
     '''
 
     correlation_matrix = df.corr()
@@ -90,7 +92,7 @@ def correlation_heatmap(df:pd.DataFrame):
                     range_color=[-1, 1]
                     )
 
-    fig.show()
+    return fig
 
 def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
     """

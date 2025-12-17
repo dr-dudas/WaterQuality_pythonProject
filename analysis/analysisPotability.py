@@ -6,12 +6,13 @@
 ########################################################################################################
 
 ### IMPORTS
-import data_modelling
+import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sb
 import plotly.graph_objects as gpo
 from scipy.stats import ttest_ind
+#from data_modelling import read_clean_general
 
 ########################################################################################################
 
@@ -19,15 +20,13 @@ from scipy.stats import ttest_ind
 
 # Exploring the relationship between potability and the rest of the variables
 
-def potability_correlations(csv_file: str):
+def potability_correlations(df: pd.DataFrame):
     '''
     Docstring for potability_relationships
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.Dataframe
     '''
-
-    df = data_modelling.read_clean_general(csv_file)
 
     non_potable = df.query("Potability == 0")
     potable = df.query("Potability == 1")
@@ -40,17 +39,15 @@ def potability_correlations(csv_file: str):
         sb.kdeplot(x = potable[col], label = "Potable")
         plt.legend()
     plt.tight_layout()
-    plt.show()
+    return plt
 
-def splom_graph(csv_file: str):
+def splom_graph(df:pd.DataFrame) -> gpo.Figure:
     '''
     Docstring for splom_graph
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.Dataframe
     '''
-
-    df = data_modelling.read_clean_general(csv_file)
 
     textPotability = ['Safe to drink' if cl == 1 else 'Unsafe to drink' for cl in df['Potability'] ]
 
@@ -84,18 +81,18 @@ def splom_graph(csv_file: str):
             hovermode="x",
     )
 
-    fig.show()
+    return fig
     
 
-def correlationPot_graph(csv_file: str):
+def correlationPot_graph(df:pd.DataFrame) -> px.imshow:
     '''
-    Docstring for correlation_graph
+    Docstring for correlationPot_graph
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
     '''
-
-    df = data_modelling.read_clean_general(csv_file)
 
     correlation_matrix = df.corr()
 
@@ -108,18 +105,17 @@ def correlationPot_graph(csv_file: str):
                     range_color=[-1, 1]
                     )
 
-    fig.show()
+    return fig
 
-def boxplot_solids(csv_file: str):
+def boxplot_solids(df: pd.DataFrame) -> px.box:
     '''
-    Box plot that shows the comparison of potable 
-    and non-potable water against solids
+    Docstring for boxplot_solids
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
     '''
-
-    df = data_modelling.read_clean_general(csv_file)
 
     fig_sulfate = px.box(
         df,
@@ -130,18 +126,17 @@ def boxplot_solids(csv_file: str):
     )
     fig_sulfate.update_layout(width=500, height=600)
     
-    fig_sulfate.show()
+    return fig_sulfate
 
-def boxplot_chloramines(csv_file: str):
+def boxplot_chloramines(df:pd.DataFrame) -> px.box:
     '''
-    Box plot that shows the comparison of potable 
-    and non-potable water against chloramines
+    Docstring for boxplot_chloramines
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
     '''
-
-    df = data_modelling.read_clean_general(csv_file)
 
     fig_chloramines = px.box(
         df,
@@ -152,28 +147,28 @@ def boxplot_chloramines(csv_file: str):
     )
     fig_chloramines.update_layout(width=500, height=600)
 
-    fig_chloramines.show()
+    return fig_chloramines
 
-def t_tests(csv_file: str):
+def t_tests(df:pd.DataFrame):
     '''
     Docstring for t_tests
     
-    :param csv_file: Description
-    :type csv_file: str
+    :param df: Description
+    :type df: pd.Dataframe
     '''
 
     #null hyp - the mean of any parameter is the same for potable and non-potable water
     #ha - mean of any parameter is different between potable and non-potable water
     
-    df = data_modelling.read_clean_general(csv_file)
-
     non_potable = df.query("Potability == 0")
     potable = df.query("Potability == 1")
 
 ########################################################################################################
 
 #### TESTING ####
-potability_correlations("data/water_potability.csv")
+#df = read_clean_general('data\water_potability.csv')
+
+#potability_correlations(df)
 #correlationPot_graph('data\water_potability.csv')
 #splom_graph('data\water_potability.csv')
 

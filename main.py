@@ -30,7 +30,7 @@ import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - 
 # load in the dataset
 # in our example, we use the Netflix dataset
 df = pd.read_csv("data/water_potability.csv")
-
+df_rq2 = dm.read_clean_general("data/water_potability.csv")
 
 # call visualizations
 # This is your individual work, each one of you will have different figures
@@ -77,16 +77,20 @@ text_rq1_4 = (
 
 title_rq2 = "RQ2: How can we correlate the Potability of water with the rest of the parameters?"
 text_rq2 = (
-    "The purpose of this research question is to find if there is any correlation \n" \
-    "between the potability of the water and the rest of the parameters measured" \
-    "For starters, we've created a correlation heatmap function"
-    ""f"{dm.correlation_heatmap(df)}" \
+    "The purpose of this research question is to find if there is any correlation" \
+    "between the potability of the water and the rest of the parameters measured. \n" \
+    "\n For starters, we've created a correlation heatmap function, shown below"
 )
+fig_rq2_0 = dm.correlation_heatmap(df_rq2)
 
-text_rq2_2 = ""
-fig_rq2 = vis_rq2.boxplot_chloramines("data/water_potability.csv")  # YOUR CODE
+text_rq2_2 = "Given our correlation heatmap, we can see that hardly any other parameter" \
+            "correlate with Potability but just to be sure, we'll select the parameters with the highest" \
+            "correlation values to see whether or not this is true. \n" \
+            "Those parameters are: Solids and Chloramines and we'll show the relationship with Potability through" \
+            "box plots and t-tests" 
+fig_rq2_1 = vis_rq2.boxplot_chloramines(df_rq2)  # YOUR CODE
 rq2_plot1_id = "Chloramines vs Potability boxplot"
-fig_rq1_2 = vis_rq2.boxplot_solids("data/water_potability.csv")
+fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
 text_rq2_3 = ""
 
@@ -137,7 +141,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Graph(id="rq1_plot_ph", figure=fig_rq1_2["ph"]),
+                    dcc.Graph(id="q1_plot_ph", figure=fig_rq1_2["ph"]),
                     width=4
                 ),
                 dbc.Col(
@@ -174,21 +178,40 @@ app.layout = dbc.Container(
         # Additional text and plots for RQ1
 
         # Research Question 2
-        #dbc.Row(
-            #dbc.Col(html.H3(title_rq2,
-                            #className="text-center text-primary"), width=12),
-            #className="mb-3"
-        #),
-        #dbc.Row(
-            #dbc.Col(html.P(
-        #        text_rq2,
-        #        className="text-center lead"), width=12),
-        #    className="mb-4"
-        #),
-        #dbc.Row(
-        #    dbc.Col(dcc.Graph(id=rq2_plot_id, figure=fig_rq2), width=12),
-        #    className="mb-5"
-        #),
+        dbc.Row(
+            dbc.Col(html.H3(title_rq2,
+                            className="text-center text-primary"), width=12),
+            className="mb-3"
+        ),
+        dbc.Row(
+            dbc.Col(html.P(
+                text_rq2,
+                className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(dcc.Graph(id=rq2_plot1_id, figure=fig_rq2_0), width=12),
+            className="mb-5"
+        ),
+        
+        dbc.Row(
+            dbc.Col(html.P(
+                text_rq2_2,
+                className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(dcc.Graph(id=rq2_plot1_id, figure=fig_rq2_1), width=12),
+            className="mb-5"
+        ),
+
+         dbc.Row(
+            dbc.Col(dcc.Graph(id=rq2_plot2_id, figure=fig_rq2_2), width=12),
+            className="mb-5"
+        ),
+
         # Placeholder for more research questions
         # Repeat the same pattern for RQ2, RQ3, etc.
         # UNCOMMENT AND MODIFY THE FOLLOWING LINES FOR EACH ADDITIONAL RQ
