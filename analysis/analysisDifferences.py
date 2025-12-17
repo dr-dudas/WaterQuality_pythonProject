@@ -1,4 +1,4 @@
-from analysis import data_modelling as dm
+import data_modelling as dm
 import pandas as pd
 import plotly.express as px
 
@@ -33,9 +33,12 @@ def rq_outputs(df, cols=None, target="Potability"):
     cols = cols or ["ph", "Hardness", "Solids"]
     figs = {"box_all": rq_box(df, cols, target)}
     figs.update({"hist_" + c: rq_hist(df, c, target) for c in cols})
-    return rq_summary(df, cols, target), rq_cohen_d(df, cols, target), figs
+    return rq_summary(df, cols, target), rq_differences(df, cols, target), figs
 
 cols = ["ph", "Hardness", "Solids"]
+
+# remove directory before delivering
+df = dm.read_clean_general("data/water_potability.csv")
 
 summary_tbl, effect_sizes, figs = rq_outputs(df, cols)
 
