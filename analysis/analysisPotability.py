@@ -8,10 +8,11 @@
 ### IMPORTS
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
-import seaborn as sb
-import plotly.graph_objects as gpo
-from scipy.stats import ttest_ind
+import plotly.figure_factory as ff
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
 #from data_modelling import read_clean_general
 
 ########################################################################################################
@@ -20,69 +21,72 @@ from scipy.stats import ttest_ind
 
 # Exploring the relationship between potability and the rest of the variables
 
-def potability_correlations(df: pd.DataFrame):
+def densityplot_solids(df: pd.DataFrame) -> ff.create_distplot:
     '''
-    Docstring for potability_relationships
+    Docstring for densityPlots
     
     :param df: Description
-    :type df: pd.Dataframe
+    :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
     '''
 
-    non_potable = df.query("Potability == 0")
-    potable = df.query("Potability == 1")
+    potable = df[df['Potability'] == 1]['Solids']
+    non_potable = df[df['Potability'] == 0]['Solids']
 
-    plt.figure(figsize = (9,9))
-    for ax, col in enumerate(df.columns[:9]):
-        plt.subplot(3,3, ax + 1)
-        plt.title(col)
-        sb.kdeplot(x = non_potable[col], label = "Non Potable")
-        sb.kdeplot(x = potable[col], label = "Potable")
-        plt.legend()
-    plt.tight_layout()
-    return plt
-
-def splom_graph(df:pd.DataFrame) -> gpo.Figure:
-    '''
-    Docstring for splom_graph
-    
-    :param df: Description
-    :type df: pd.Dataframe
-    '''
-
-    textPotability = ['Safe to drink' if cl == 1 else 'Unsafe to drink' for cl in df['Potability'] ]
-
-    fig = gpo.Figure(data=gpo.Splom(
-            dimensions=[dict(label = 'pH', values = df['ph']),
-                        dict(label = 'Hardness', values = df['Hardness']),
-                        dict(label = 'Solids', values = df['Solids']),
-                        dict(label = 'Chloramines', values = df['Chloramines']),
-                        dict(label = 'Sulfate', values = df['Sulfate']),
-                        dict(label = 'Conductivity', values = df['Conductivity']),
-                        dict(label = 'Organic carbon', values = df['Organic_carbon']),
-                        dict(label = 'Trihalomethanes', values = df['Trihalomethanes']),
-                        dict(label = 'Turbidity', values = df['Turbidity']),
-                        ],
-            showupperhalf=False,
-            text=textPotability,
-            marker = dict(color = df['Potability'],
-                            size = 5,
-                            colorscale = 'Bluered',
-                            showscale = False,
-                            line_color = 'white',
-                            line_width = 0.5)
-        )
+    # Create a figure
+    fig = ff.create_distplot(
+        hist_data=[non_potable, potable],
+        group_labels=['Non Potable', 'Potable'],
+        show_hist=False,
+        show_rug=False,
+        colors=['blue', 'orange']
     )
 
+    # Update layout
     fig.update_layout(
-            title=dict(text="Water Data set"),
-            hoversubplots="axis",
-            width=1300,
-            height=1300,
-            hovermode="x",
+        title='Solids Density by Potability',
+        xaxis_title='Solids',
+        yaxis_title='Density',
+        width=600,
+        height=500
     )
 
     return fig
+
+def densityplot_chloramines(df: pd.DataFrame) -> ff.create_distplot:
+    '''
+    Docstring for densityPlots
     
+    :param df: Description
+    :type df: pd.DataFrame
+    :return: Description
+    :rtype: Any
+    '''
+
+    potable = df[df['Potability'] == 1]['Chloramines']
+    non_potable = df[df['Potability'] == 0]['Chloramines']
+
+    # Create a figure
+    fig = ff.create_distplot(
+        hist_data=[non_potable, potable],
+        group_labels=['Non Potable', 'Potable'],
+        show_hist=False,
+        show_rug=False,
+        colors=['blue', 'orange']
+    )
+
+    # Update layout
+    fig.update_layout(
+        title='Chloramines Density by Potability',
+        xaxis_title='Chloramines',
+        yaxis_title='Density',
+        width=600,
+        height=500
+    )
+
+    return fig
+   
 
 def correlationPot_graph(df:pd.DataFrame) -> px.imshow:
     '''
@@ -120,9 +124,9 @@ def boxplot_solids(df: pd.DataFrame) -> px.box:
     fig_sulfate = px.box(
         df,
         x='Potability',
-        y='Sulfate',
+        y='Solids',
         color='Potability',
-        title='Sulfate vs Potability'
+        title='Solids vs Potability'
     )
     fig_sulfate.update_layout(width=500, height=600)
     
@@ -143,29 +147,65 @@ def boxplot_chloramines(df:pd.DataFrame) -> px.box:
         x='Potability',
         y='Chloramines',
         color='Potability',
-        title='Chloramines vs Potability'
+        title='Chloramines vs Potability',
     )
     fig_chloramines.update_layout(width=500, height=600)
 
     return fig_chloramines
 
-def t_tests(df:pd.DataFrame):
-    '''
-    Docstring for t_tests
-    
-    :param df: Description
-    :type df: pd.Dataframe
-    '''
+def logRegression(df:pd.DataFrame):
 
-    #null hyp - the mean of any parameter is the same for potable and non-potable water
-    #ha - mean of any parameter is different between potable and non-potable water
+    x = df[['Solids', 'Chloramines']]
+    y = df[['Potability']]
+  
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+    log_regression = LogisticRegression()
+    log_regression.fit(x_train, y_train.values.ravel())
+    y_pred = log_regression.predict(x_test)
+
+    conf_matrix = metrics.confusion_matrix(y_test, y_pred)
+    accuracy = metrics.accuracy_score(y_test, y_pred)
+
+    z_text = [[str(y) for y in x] for x in conf_matrix]
     
-    non_potable = df.query("Potability == 0")
-    potable = df.query("Potability == 1")
+    fig_confMatrix = ff.create_annotated_heatmap(
+        z = conf_matrix,
+        x = ['Predicted Potable', 'Predicted Non-Potable'],
+        y = ['Actual Potable', 'Actual Non-potable'],
+        annotation_text=z_text, 
+        colorscale='Viridis'
+    )
+
+    fig_confMatrix.update_layout(title_text='<i><b>Confusion matrix</b></i>')
+
+    fig_confMatrix.add_annotation(dict(font=dict(color="black",size=14),
+                        x=0.5,
+                        y=-0.15,
+                        showarrow=False,
+                        text="Predicted value",
+                        xref="paper",
+                        yref="paper"))
+
+    # add custom yaxis title
+    fig_confMatrix.add_annotation(dict(font=dict(color="black",size=14),
+                            x=-0.35,
+                            y=0.5,
+                            showarrow=False,
+                            text="Real value",
+                            textangle=-90,
+                            xref="paper",
+                            yref="paper"))
+
+    # adjust margins to make room for yaxis title
+    fig_confMatrix.update_layout(margin=dict(t=50, l=200))
+
+
+    fig_confMatrix['data'][0]['showscale'] = True
+
+    return fig_confMatrix, accuracy
 
 ########################################################################################################
-
-#### TESTING ####
 #df = read_clean_general('data\water_potability.csv')
 
 #potability_correlations(df)
