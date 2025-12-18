@@ -3,13 +3,37 @@ import pandas as pd
 import plotly.express as px
 
 
-# Grouped summary stats (count/mean/std/min/25/50/75/max) for each class
 def rq_summary(df, cols, target="Potability"):
+    '''
+    Docstring for rq_summary
+
+    :param df: Cleaned water dataset
+    :type df: pd.DataFrame
+    :param cols: List of feature columns to summarize
+    :type cols: list
+    :param target: Target column used for grouping
+    :type target: str
+    :return: Grouped descriptive statistics table
+    :rtype: pd.DataFrame
+    '''
     return df.groupby(target)[cols].describe()
 
 
-# One box plot comparing distributions for multiple features by class
 def rq_box(df, cols, target="Potability", labels=None):
+    '''
+    Docstring for rq_box
+
+    :param df: Cleaned water dataset
+    :type df: pd.DataFrame
+    :param cols: List of feature columns to plot
+    :type cols: list
+    :param target: Target column indicating potability
+    :type target: str
+    :param labels: Mapping of target values to readable labels
+    :type labels: dict or None
+    :return: Box plot comparing feature distributions by potability
+    :rtype: Any
+    '''
     labels = labels or {0: "Non-potable", 1: "Potable"}
 
     long_df = (
@@ -28,8 +52,23 @@ def rq_box(df, cols, target="Potability", labels=None):
     )
 
 
-# Overlay histogram for a single feature by class
 def rq_hist(df, col, target="Potability", labels=None, bins=40):
+    '''
+    Docstring for rq_hist
+
+    :param df: Cleaned water dataset
+    :type df: pd.DataFrame
+    :param col: Feature column to plot
+    :type col: str
+    :param target: Target column indicating potability
+    :type target: str
+    :param labels: Mapping of target values to readable labels
+    :type labels: dict or None
+    :param bins: Number of histogram bins
+    :type bins: int
+    :return: Overlay histogram comparing distributions by potability
+    :rtype: Any
+    '''
     labels = labels or {0: "Non-potable", 1: "Potable"}
 
     plot_df = (
@@ -49,9 +88,19 @@ def rq_hist(df, col, target="Potability", labels=None, bins=40):
     )
 
 
-# Returns (summary_table, figures_dict) for the RQ
 def rq_outputs(df, cols=None, target="Potability"):
-    """Returns (summary_table, figures_dict) for the RQ."""
+    '''
+    Docstring for rq_outputs
+
+    :param df: Cleaned water dataset
+    :type df: pd.DataFrame
+    :param cols: List of feature columns to analyze
+    :type cols: list or None
+    :param target: Target column indicating potability
+    :type target: str
+    :return: Summary table and dictionary of figures
+    :rtype: tuple
+    '''
     cols = cols or ["ph", "Hardness", "Solids"]
 
     figs = {"box_all": rq_box(df, cols, target)}
@@ -71,10 +120,9 @@ df = dm.read_clean_general("data/water_potability.csv")
 
 summary_tbl, figs = rq_outputs(df, cols)
 
-print(summary_tbl)  # grouped descriptive stats table
+print(summary_tbl)
 
 figs["box_all"].show()
 figs["hist_ph"].show()
 figs["hist_Hardness"].show()
 figs["hist_Solids"].show()
-
