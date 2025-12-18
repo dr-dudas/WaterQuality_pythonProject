@@ -87,16 +87,6 @@ fig_rq1_3 = vis_rq1.plot_percentages(vis_rq1.compute_percentages(df, new_col, ta
 rq1_plot1_3_id = "Percentage of Potability vs Missing Values"
 ###
 text_rq1_4 = (
-    "The stacked bar chart shows the percentage of potable and non-potable water samples for each "
-    "count of missing values.\n"
-    "As the number of missing values increases, the average potability appears to decrease slightly, "
-    "but the overall trend is weak.\n"
-    "Only when three missing values are present do we observe a more noticeable drop in potability; "
-    "however, the number of samples in this group is relatively small.\n"
-    "Overall, this suggests that missing values in ph, Sulfate, and Trihalomethanes have a very limited "
-    "association with water potability, and missingness alone is not a strong predictor of potability."
-)
-text_rq1_4 = (
     "The stacked bar chart displays the percentage of potable and non-potable water samples for "
     "each observed count of missing values.\n"
     "Across samples with one or two missing values, the proportion of potable water remains "
