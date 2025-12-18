@@ -49,11 +49,6 @@ fig_rq1_1 = vis_rq1.missing_values_heatmap(df)
 rq1_plot1_1_id = "Missing values heatmap"
 ###
 text_rq1_2 = (
-    "From the heatmap, it is clear that missing values in 'ph', 'Sulfate', and 'Trihalomethanes' "
-    "are scattered throughout the dataset.\n"
-    "Next, we analyze the distributions of these variables and examine how they relate to the target variable 'Potability'."
-)
-text_rq1_2 = (
     "The heatmap visualization shows that missing values only occur in the variables "
     "'ph', 'Sulfate', and 'Trihalomethanes'.\n"
     "These missing values are distributed throughout the dataset rather than being concentrated "
