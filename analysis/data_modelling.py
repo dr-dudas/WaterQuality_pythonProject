@@ -30,8 +30,8 @@ def basic_cleaning(df_file_path:str) -> pd.DataFrame:
     df = pd.read_csv(df_file_path)
     # Create a copy of the dataframe to avoid modifying the original
     df = df.drop_duplicates()
-    # Standardize column names - strip whitespace and convert to lowercase
-    df.columns = df.columns.str.strip().str.lower()
+    # Standardize column names - strip whitespace
+    df.columns = df.columns.str.strip()
     # Invalid numeric values - convert to numeric where possible, coercing errors to NaN - missing values will be NaN
     df = df.apply(pd.to_numeric, errors="coerce")
     # Invalid pH values are detected using logical conditions and replaced with NaN to standardize missing data handling.
@@ -134,9 +134,9 @@ def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
     df["missing_value"] = df.isnull().sum(axis=1)
     return df
 
-# df = pd.read_csv('data/water_potability.csv')
+#df = pd.read_csv('data/water_potability.csv')
 
-# introduction_to_data(df)
+#introduction_to_data(df)
 #distribution_visualization(df)
 #correlation_heatmap(df)
 ########################################################################################################
