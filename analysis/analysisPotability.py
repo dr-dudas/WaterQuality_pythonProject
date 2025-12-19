@@ -206,11 +206,4 @@ def logRegression(df:pd.DataFrame):
     return fig_confMatrix, accuracy
 
 ########################################################################################################
-#df = read_clean_general('data\water_potability.csv')
 
-#potability_correlations(df)
-#correlationPot_graph('data\water_potability.csv')
-#splom_graph('data\water_potability.csv')
-
-
-#t_tests('data\water_potability.csv')
