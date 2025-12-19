@@ -90,13 +90,12 @@ fig_rq2_0 = dm.correlation_heatmap(df_rq2)
 text_rq2_2 = "Given our correlation heatmap, we can see that hardly any other parameter" \
             "correlate with Potability but just to be sure, we'll select the parameters with the highest" \
             "correlation values to see whether or not this is true. \n" \
-            "Those parameters are: Solids and Chloramines and we'll show the relationship with Potability through" \
-            "box plots and t-tests" 
+            "Those parameters are - Solids and Chloramines - and we'll show the relationship with Potability through \n" \
+            "box plots, density plots and lastly, a logistics regression." 
 fig_rq2_1 = vis_rq2.boxplot_chloramines(df_rq2)  # YOUR CODE
 rq2_plot1_id = "Chloramines vs Potability boxplot"
 fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
-text_rq2_3 = ""
 
 ###Q3
 title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
@@ -137,6 +136,35 @@ rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
 fig_rq3_3c = rq_hist(df, "Solids", target=target_rq3, bins=40)
 rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 
+text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indicating no clear " \
+            "distiction between potable and non-potable water based on Chloramines. Same can be said about " \
+            "Solids and Potability box plot although non-potable water has a slightly wider spread and a " \
+            "few outliers, but the medians are close. This means there's no strong relationship between Potability, " \
+            "Solids and Chloramines"
+
+text_rq2_4 = "Density plots"
+fig_rq2_3 = vis_rq2.densityplot_chloramines(df_rq2)
+rq2_plot3_id = "Solids vs Potability density plot"
+fig_rq2_4 = vis_rq2.densityplot_solids(df_rq2)
+rq2_plot4_id = "Solids vs Potability density plot"
+
+text_rq2_5 = "Logistics regression"
+fig_rq2_5 = vis_rq2.logRegression(df_rq2)[0]
+rq2_plot5_id = "Confusion matrix"
+text_rq2_6 = "Accuracy value obtained from the logistics regression calculation: " \
+            f"{vis_rq2.logRegression(df_rq2)[1]} \n" \
+            "Using the box plots, we argued that there was no strong relationship between Potability, Solids, " \
+            "and Chloramines, and now regarding the density plots we can see that the density curves both for Solids " \
+            "and Chloramines in potable and non-potable water are nearly identical, which suggests they alone do " \
+            "not provide a meaningful distinction between potable and non-potable water. " \
+            "Leaving us a logistics regression where we obtained a confusion matrix and an accuracy value. " \
+            "The confusion matrix shows that the model fails to predict any samples as non-potable, " \
+            "once again reinforcing the idea that Solids and Chloramines don't provide enough information" \
+            "to differentiate between both. And given the accuracy value of 63%, we can suggest that the dataset is " \
+            "imbalanced and the model fails to predict non-potable samples." \
+            
+
+text_rq2_7 = "In conclusion, we can argue that Potabibility has no correlation whatsoever with the rest of the parameters."
 
 ####Q5
 title_rq5 = "RQ5: Which water quality parameter has the strongest predictive influence on potability?"
@@ -255,25 +283,44 @@ app.layout = dbc.Container(
         ),
 
         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq2_plot1_id, figure=fig_rq2_0), width=12),
+            [
+                dbc.Col(dbc.Col(dcc.Graph(id=rq2_plot1_id, figure=fig_rq2_1), width=12)),
+                dbc.Col(dbc.Col(dcc.Graph(id=rq2_plot2_id, figure=fig_rq2_2), width=12)),
+            ],
             className="mb-5"
         ),
         
-        dbc.Row(
+         dbc.Row(
             dbc.Col(html.P(
-                text_rq2_2,
+                text_rq2_3,
                 className="text-center lead"), width=12),
             className="mb-4"
         ),
 
         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq2_plot1_id, figure=fig_rq2_1), width=12),
+            [
+                dbc.Col(dbc.Col(dcc.Graph(id=rq2_plot3_id, figure=fig_rq2_3), width=12)),
+                dbc.Col(dbc.Col(dcc.Graph(id=rq2_plot4_id, figure=fig_rq2_4), width=12)),
+            ],
             className="mb-5"
         ),
 
-         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq2_plot2_id, figure=fig_rq2_2), width=12),
-            className="mb-5"
+        dbc.Row(
+            dbc.Col(html.P(
+                text_rq2_5,
+                className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(dcc.Graph(id=rq2_plot5_id, figure=fig_rq2_5), width=12),
+        ),
+        dbc.Row(
+            dbc.Col(html.P(text_rq2_6,className="text-center lead"), width=12),
+        ), 
+
+        dbc.Row(
+            dbc.Col(html.P(text_rq2_7,className="text-center lead"), width=12),
         ),
         
         # Research Question 3
