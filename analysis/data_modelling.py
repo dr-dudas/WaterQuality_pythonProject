@@ -134,9 +134,8 @@ def add_missing_value_column(df: pd.DataFrame) -> pd.DataFrame:
     df["missing_value"] = df.isnull().sum(axis=1)
     return df
 
-df = pd.read_csv('data/water_potability.csv')
-print(df["Potability"].value_counts(dropna=False))
-print(df.duplicated().sum())
+# df = pd.read_csv('data/water_potability.csv')
+
 # introduction_to_data(df)
 #distribution_visualization(df)
 #correlation_heatmap(df)
