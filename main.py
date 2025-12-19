@@ -12,7 +12,6 @@
 ### This is just a template, feel free to modify the layout, and look and feel as needed
 
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.express as px
 import dash
 from dash import dcc, html
@@ -22,7 +21,7 @@ import dash_bootstrap_components as dbc
 import analysis.data_modelling as dm # loading in your data_modeling.py
 import analysis.analysisMissingValues as vis_rq1 # loading in analysisMissingValues - individual analysis module
 import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
-import analysis.analysisDifference as vis_rq3 # loading in analysisDifference - individual analysis module
+import analysis.analysisDifferences as vis_rq3 # loading in analysisDifference - individual analysis module
 #import analysis.analysis_rq4 as vis_rq4 # loading in your individual analysis module
 import analysis.analysisInfluence as vis_rq5 # loading in your individual analysis module
 
@@ -97,45 +96,6 @@ rq2_plot1_id = "Chloramines vs Potability boxplot"
 fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
 
-###Q3
-title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
-
-cols_rq3 = ["ph", "Hardness", "Solids"]
-target_rq3 = "Potability"
-
-# --- RQ3.1: Summary table (grouped descriptive statistics)
-summary_tbl_rq3 = rq_summary(df, cols_rq3, target=target_rq3)
-
-text_rq3_1 = (
-    "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
-    "for pH, hardness, and solids between potable (1) and non-potable (0) water samples.\n\n"
-    f"{summary_tbl_rq3}"
-)
-
-# --- RQ3.2: Box plot (all features together)
-text_rq3_2 = (
-    "Next, we use a box plot to compare the distributions of pH, hardness, and solids across the two classes. "
-    "This helps us see median shifts, spread (IQR), and outliers between potable and non-potable samples."
-)
-
-fig_rq3_2 = rq_box(df, cols_rq3, target=target_rq3)
-rq3_plot3_2_id = "RQ3 Box plot: Feature distributions by potability"
-
-# --- RQ3.3: Histograms (feature-by-feature)
-text_rq3_3 = (
-    "Finally, we inspect overlay histograms for each feature. "
-    "These show how much the two classes overlap for each variable."
-)
-
-fig_rq3_3a = rq_hist(df, "ph", target=target_rq3, bins=40)
-rq3_plot3_3a_id = "RQ3 Histogram: pH by potability"
-
-fig_rq3_3b = rq_hist(df, "Hardness", target=target_rq3, bins=40)
-rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
-
-fig_rq3_3c = rq_hist(df, "Solids", target=target_rq3, bins=40)
-rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
-
 text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indicating no clear " \
             "distiction between potable and non-potable water based on Chloramines. Same can be said about " \
             "Solids and Potability box plot although non-potable water has a slightly wider spread and a " \
@@ -165,6 +125,47 @@ text_rq2_6 = "Accuracy value obtained from the logistics regression calculation:
             
 
 text_rq2_7 = "In conclusion, we can argue that Potabibility has no correlation whatsoever with the rest of the parameters."
+
+###Q3
+title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
+
+cols_rq3 = ["ph", "Hardness", "Solids"]
+target_rq3 = "Potability"
+
+# --- RQ3.1: Summary table (grouped descriptive statistics)
+summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
+
+text_rq3_1 = (
+    "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
+    "for pH, hardness, and solids between potable (1) and non-potable (0) water samples.\n\n"
+    f"{summary_tbl_rq3}"
+)
+
+# --- RQ3.2: Box plot (all features together)
+text_rq3_2 = (
+    "Next, we use a box plot to compare the distributions of pH, hardness, and solids across the two classes. "
+    "This helps us see median shifts, spread (IQR), and outliers between potable and non-potable samples."
+)
+
+fig_rq3_2 = vis_rq3.rq_box(df, cols_rq3, target=target_rq3)
+rq3_plot3_2_id = "RQ3 Box plot: Feature distributions by potability"
+
+# --- RQ3.3: Histograms (feature-by-feature)
+text_rq3_3 = (
+    "Finally, we inspect overlay histograms for each feature. "
+    "These show how much the two classes overlap for each variable."
+)
+
+fig_rq3_3a = vis_rq3.rq_hist(df, "ph", target=target_rq3, bins=40)
+rq3_plot3_3a_id = "RQ3 Histogram: pH by potability"
+
+fig_rq3_3b = vis_rq3.rq_hist(df, "Hardness", target=target_rq3, bins=40)
+rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
+
+fig_rq3_3c = vis_rq3.rq_hist(df, "Solids", target=target_rq3, bins=40)
+rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
+
+
 
 ####Q5
 title_rq5 = "RQ5: Which water quality parameter has the strongest predictive influence on potability?"
@@ -465,7 +466,7 @@ from dash import Input, Output
     Input("rq3-bins-slider", "value"),
 )
 def update_rq3_histogram(selected_feature, bins):
-    return rq_hist(df, selected_feature, bins=bins)
+    return vis_rq3.rq_hist(df, selected_feature, bins=bins)
 # Controls row
 dbc.Row(
     [
@@ -503,7 +504,7 @@ dbc.Row(
 
 # Histogram graph
 dbc.Row(
-    dbc.Col(dcc.Graph(id="rq3-hist-graph", figure=rq_hist(df, "ph", bins=40)), width=12),
+    dbc.Col(dcc.Graph(id="rq3-hist-graph", figure=vis_rq3.rq_hist(df, "ph", bins=40)), width=12),
     className="mb-5",
 )
 
