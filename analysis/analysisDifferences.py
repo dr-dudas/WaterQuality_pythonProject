@@ -2,7 +2,7 @@ import data_modelling as dm
 import pandas as pd
 import plotly.express as px
 
-
+# Grouped summary stats (count/mean/std/min/25/50/75/max) for each class
 def rq_summary(df, cols, target="Potability"):
     '''
     Docstring for rq_summary
@@ -18,7 +18,7 @@ def rq_summary(df, cols, target="Potability"):
     '''
     return df.groupby(target)[cols].describe()
 
-
+# One box plot comparing distributions for multiple features by class
 def rq_box(df, cols, target="Potability", labels=None):
     '''
     Docstring for rq_box
@@ -51,7 +51,7 @@ def rq_box(df, cols, target="Potability", labels=None):
         title="Feature distributions by potability",
     )
 
-
+# Overlay histogram for a single feature by class
 def rq_hist(df, col, target="Potability", labels=None, bins=40):
     '''
     Docstring for rq_hist
@@ -87,7 +87,7 @@ def rq_hist(df, col, target="Potability", labels=None, bins=40):
         title=f"{col} by potability",
     )
 
-
+# Returns (summary_table, figures_dict) for the RQ
 def rq_outputs(df, cols=None, target="Potability"):
     '''
     Docstring for rq_outputs
@@ -120,7 +120,7 @@ df = dm.read_clean_general("data/water_potability.csv")
 
 summary_tbl, figs = rq_outputs(df, cols)
 
-print(summary_tbl)
+print(summary_tbl) # prints the grouped descriptive stats table
 
 figs["box_all"].show()
 figs["hist_ph"].show()
