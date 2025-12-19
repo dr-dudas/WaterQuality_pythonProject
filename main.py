@@ -29,7 +29,7 @@ import analysis.analysisInfluence as vis_rq5 # loading in your individual analys
 
 # load in the dataset
 # in our example, we use the Netflix dataset
-df = pd.read_csv("data/water_potability.csv")
+df = dm.basic_cleaning("data/water_potability.csv")
 df_rq2 = dm.read_clean_general("data/water_potability.csv")
 
 # call visualizations
@@ -46,17 +46,20 @@ text_rq1_1 = text_rq1_1 = (
 fig_rq1_1 = vis_rq1.missing_values_heatmap(df)
 rq1_plot1_1_id = "Missing values heatmap"
 ###
-text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'Sulfate', and 'Trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
-target = 'Potability'
-col_missing_values = ['ph', 'Sulfate', 'Trihalomethanes']
+text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'sulfate', and 'trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
+target = 'potability'
+col_missing_values = ['ph', 'sulfate', 'trihalomethanes']
 new_col = 'missing_value'
+ph = "ph"
+sulfate = "sulfate"
+trih = "trihalomethanes"
 fig_rq1_2 = vis_rq1.compare_distributions(df, col_missing_values, target)
-rq1_plot1_2_id = "Distributions of columns with missing values vs Potability"
+rq1_plot1_2_id = "Distributions of columns with missing values vs potability"
 
 ###
 text_rq1_3 = (
-    "From the distributions in the histograms, we observe that the missing values in 'ph', 'Sulfate', and 'Trihalomethanes' "
-    "do not show a strong bias towards either class of 'Potability'.\n"
+    "From the distributions in the histograms, we observe that the missing values in 'ph', 'sulfate', and 'trihalomethanes' "
+    "do not show a strong bias towards either class of 'potability'.\n"
     "Even high or low values of these features are present in both potable and non-potable water samples.\n"
     "Further statistical analysis can be performed to quantify the relationship between missing values and potability.\n"
     "We will compute this correlation between the presence of missing values and potability.\n"
@@ -71,7 +74,7 @@ text_rq1_4 = (
     "count of missing values.\n "
     "We can see that as the number of missing values increases, the average potability tends to decrease, but the trend is not very strong.\n"
     "First when we have 3 missing values do we see a significant drop in potability - but the amount of data on those are low."
-    "We conclude that the missing values of pH, Sulfate, and Trihalomethanes have very limited correlation with the potability of water samples."
+    "We conclude that the missing values of ph, sulfate, and trihalomethanes have very limited correlation with the potability of water samples."
 )
 
 
@@ -148,7 +151,7 @@ app.layout = dbc.Container(
             className="mb-4"
         ),
         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=12),
+            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=8),
             className="mb-5"
         
         ),
@@ -162,15 +165,15 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Graph(id="q1_plot_ph", figure=fig_rq1_2["ph"]),
+                    dcc.Graph(id="q1_plot_ph", figure=fig_rq1_2[ph]),
                     width=4
                 ),
                 dbc.Col(
-                    dcc.Graph(id="rq1_plot_sulfate", figure=fig_rq1_2["Sulfate"]),
+                    dcc.Graph(id="rq1_plot_sulfate", figure=fig_rq1_2[sulfate]),
                     width=4
                 ),
                 dbc.Col(
-                    dcc.Graph(id="rq1_plot_trihalo", figure=fig_rq1_2["Trihalomethanes"]),
+                    dcc.Graph(id="rq1_plot_trihalo", figure=fig_rq1_2[trih]),
                     width=4
                 ),
             ],
