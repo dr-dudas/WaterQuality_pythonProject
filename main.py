@@ -12,6 +12,7 @@
 ### This is just a template, feel free to modify the layout, and look and feel as needed
 
 import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.express as px
 import dash
 from dash import dcc, html
@@ -46,20 +47,20 @@ text_rq1_1 = text_rq1_1 = (
 fig_rq1_1 = vis_rq1.missing_values_heatmap(df)
 rq1_plot1_1_id = "Missing values heatmap"
 ###
-text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'sulfate', and 'trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
-target = 'potability'
-col_missing_values = ['ph', 'sulfate', 'trihalomethanes']
+text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'Sulfate', and 'Trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
+target = 'Potability'
+col_missing_values = ['ph', 'Sulfate', 'Trihalomethanes']
 new_col = 'missing_value'
 ph = "ph"
-sulfate = "sulfate"
-trih = "trihalomethanes"
+sulfate = "Sulfate"
+trih = "Trihalomethanes"
 fig_rq1_2 = vis_rq1.compare_distributions(df, col_missing_values, target)
 rq1_plot1_2_id = "Distributions of columns with missing values vs potability"
 
 ###
 text_rq1_3 = (
-    "From the distributions in the histograms, we observe that the missing values in 'ph', 'sulfate', and 'trihalomethanes' "
-    "do not show a strong bias towards either class of 'potability'.\n"
+    "From the distributions in the histograms, we observe that the missing values in 'ph', 'Sulfate', and 'Trihalomethanes' "
+    "do not show a strong bias towards either class of 'Potability'.\n"
     "Even high or low values of these features are present in both potable and non-potable water samples.\n"
     "Further statistical analysis can be performed to quantify the relationship between missing values and potability.\n"
     "We will compute this correlation between the presence of missing values and potability.\n"
@@ -74,7 +75,7 @@ text_rq1_4 = (
     "count of missing values.\n "
     "We can see that as the number of missing values increases, the average potability tends to decrease, but the trend is not very strong.\n"
     "First when we have 3 missing values do we see a significant drop in potability - but the amount of data on those are low."
-    "We conclude that the missing values of ph, sulfate, and trihalomethanes have very limited correlation with the potability of water samples."
+    "We conclude that the missing values of ph, Sulfate, and Trihalomethanes have very limited correlation with the potability of water samples."
 )
 
 
@@ -95,6 +96,45 @@ fig_rq2_1 = vis_rq2.boxplot_chloramines(df_rq2)  # YOUR CODE
 rq2_plot1_id = "Chloramines vs Potability boxplot"
 fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
+
+###Q3
+title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
+
+cols_rq3 = ["ph", "Hardness", "Solids"]
+target_rq3 = "Potability"
+
+# --- RQ3.1: Summary table (grouped descriptive statistics)
+summary_tbl_rq3 = rq_summary(df, cols_rq3, target=target_rq3)
+
+text_rq3_1 = (
+    "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
+    "for pH, hardness, and solids between potable (1) and non-potable (0) water samples.\n\n"
+    f"{summary_tbl_rq3}"
+)
+
+# --- RQ3.2: Box plot (all features together)
+text_rq3_2 = (
+    "Next, we use a box plot to compare the distributions of pH, hardness, and solids across the two classes. "
+    "This helps us see median shifts, spread (IQR), and outliers between potable and non-potable samples."
+)
+
+fig_rq3_2 = rq_box(df, cols_rq3, target=target_rq3)
+rq3_plot3_2_id = "RQ3 Box plot: Feature distributions by potability"
+
+# --- RQ3.3: Histograms (feature-by-feature)
+text_rq3_3 = (
+    "Finally, we inspect overlay histograms for each feature. "
+    "These show how much the two classes overlap for each variable."
+)
+
+fig_rq3_3a = rq_hist(df, "ph", target=target_rq3, bins=40)
+rq3_plot3_3a_id = "RQ3 Histogram: pH by potability"
+
+fig_rq3_3b = rq_hist(df, "Hardness", target=target_rq3, bins=40)
+rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
+
+fig_rq3_3c = rq_hist(df, "Solids", target=target_rq3, bins=40)
+rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 
 text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indicating no clear " \
             "distiction between potable and non-potable water based on Chloramines. Same can be said about " \
