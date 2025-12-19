@@ -1,4 +1,4 @@
-import data_modelling as dm
+from analysis import data_modelling as dm
 import pandas as pd
 import plotly.express as px
 

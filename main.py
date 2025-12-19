@@ -104,7 +104,7 @@ cols_rq3 = ["ph", "Hardness", "Solids"]
 target_rq3 = "Potability"
 
 # --- RQ3.1: Summary table (grouped descriptive statistics)
-summary_tbl_rq3 = rq_summary(df, cols_rq3, target=target_rq3)
+summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
 
 text_rq3_1 = (
     "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
