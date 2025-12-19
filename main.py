@@ -22,7 +22,7 @@ import dash_bootstrap_components as dbc
 import analysis.data_modelling as dm # loading in your data_modeling.py
 import analysis.analysisMissingValues as vis_rq1 # loading in analysisMissingValues - individual analysis module
 import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
-#import analysis.analysis_rq3 as vis_rq3 # loading in your individual analysis module
+import analysis.analysisDifference as vis_rq3 # loading in analysisDifference - individual analysis module
 #import analysis.analysis_rq4 as vis_rq4 # loading in your individual analysis module
 import analysis.analysisInfluence as vis_rq5 # loading in your individual analysis module
 
@@ -31,6 +31,7 @@ import analysis.analysisInfluence as vis_rq5 # loading in your individual analys
 # in our example, we use the Netflix dataset
 df = dm.basic_cleaning("data/water_potability.csv")
 df_rq2 = dm.read_clean_general("data/water_potability.csv")
+df = dm.read_clean_general("data/water_potability.csv")
 
 # call visualizations
 # This is your individual work, each one of you will have different figures
@@ -96,6 +97,45 @@ rq2_plot1_id = "Chloramines vs Potability boxplot"
 fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
 text_rq2_3 = ""
+
+###Q3
+title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
+
+cols_rq3 = ["ph", "Hardness", "Solids"]
+target_rq3 = "Potability"
+
+# --- RQ3.1: Summary table (grouped descriptive statistics)
+summary_tbl_rq3 = rq_summary(df, cols_rq3, target=target_rq3)
+
+text_rq3_1 = (
+    "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
+    "for pH, hardness, and solids between potable (1) and non-potable (0) water samples.\n\n"
+    f"{summary_tbl_rq3}"
+)
+
+# --- RQ3.2: Box plot (all features together)
+text_rq3_2 = (
+    "Next, we use a box plot to compare the distributions of pH, hardness, and solids across the two classes. "
+    "This helps us see median shifts, spread (IQR), and outliers between potable and non-potable samples."
+)
+
+fig_rq3_2 = rq_box(df, cols_rq3, target=target_rq3)
+rq3_plot3_2_id = "RQ3 Box plot: Feature distributions by potability"
+
+# --- RQ3.3: Histograms (feature-by-feature)
+text_rq3_3 = (
+    "Finally, we inspect overlay histograms for each feature. "
+    "These show how much the two classes overlap for each variable."
+)
+
+fig_rq3_3a = rq_hist(df, "ph", target=target_rq3, bins=40)
+rq3_plot3_3a_id = "RQ3 Histogram: pH by potability"
+
+fig_rq3_3b = rq_hist(df, "Hardness", target=target_rq3, bins=40)
+rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
+
+fig_rq3_3c = rq_hist(df, "Solids", target=target_rq3, bins=40)
+rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 
 
 ####Q5
@@ -235,7 +275,64 @@ app.layout = dbc.Container(
             dbc.Col(dcc.Graph(id=rq2_plot2_id, figure=fig_rq2_2), width=12),
             className="mb-5"
         ),
+        
+        # Research Question 3
+        dbc.Row(
+            dbc.Col(html.H3(title_rq3, className="text-center text-primary"), width=12),
+            className="mb-3"
+        ),
 
+        dbc.Row(
+            dbc.Col(html.P(text_rq3_1, className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        # Summary table
+        dbc.Row(
+            dbc.Col(
+                dash_table.DataTable(
+                    data=summary_flat_rq3.to_dict("records"),
+                    columns=[{"name": c, "id": c} for c in summary_flat_rq3.columns],
+                    page_size=10,
+                    style_table={"overflowX": "auto"},
+                    style_cell={"fontSize": 13, "padding": "6px"},
+                    style_header={"fontWeight": "bold"},
+                ),
+                width=12
+            ),
+            className="mb-5"
+        ),
+
+        dbc.Row(
+            dbc.Col(html.P(text_rq3_2, className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(dcc.Graph(id=rq3_plot3_2_id, figure=fig_rq3_2), width=12),
+            className="mb-5"
+        ),
+
+        dbc.Row(
+            dbc.Col(html.P(text_rq3_3, className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            [
+                dbc.Col(dcc.Graph(id=rq3_plot3_3_ph_id, figure=fig_rq3_3_ph), width=4),
+                dbc.Col(dcc.Graph(id=rq3_plot3_3_hardness_id, figure=fig_rq3_3_hardness), width=4),
+                dbc.Col(dcc.Graph(id=rq3_plot3_3_solids_id, figure=fig_rq3_3_solids), width=4),
+            ],
+            className="mb-5"
+        ),
+
+        dbc.Row(
+            dbc.Col(html.P(text_rq3_4, className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        
         # Research Question 5
 
         dbc.Row(
@@ -312,7 +409,56 @@ app.layout = dbc.Container(
 ### You can define your callbacks below
 ### It is optional. Bonus points if you implement interactivity!!!
 
+# Q3 CALLBACK
+from dash import Input, Output
 
+@app.callback(
+    Output("rq3-hist-graph", "figure"),
+    Input("rq3-feature-dropdown", "value"),
+    Input("rq3-bins-slider", "value"),
+)
+def update_rq3_histogram(selected_feature, bins):
+    return rq_hist(df, selected_feature, bins=bins)
+# Controls row
+dbc.Row(
+    [
+        dbc.Col(
+            [
+                html.Label("Feature"),
+                dcc.Dropdown(
+                    id="rq3-feature-dropdown",
+                    options=[{"label": c, "value": c} for c in cols],
+                    value="ph",
+                    clearable=False,
+                ),
+            ],
+            width=4,
+        ),
+        dbc.Col(
+            [
+                html.Label("Bins"),
+               
+                dcc.Slider(
+                    id="rq3-bins-slider",
+                    min=10,
+                    max=100,
+                    step=5,
+                    value=40,
+                    tooltip={"placement": "bottom", "always_visible": True},
+                    updatemode="mouseup",
+                ),
+            ],
+            width=8,
+        ),
+    ],
+    className="mb-4",
+)
+
+# Histogram graph
+dbc.Row(
+    dbc.Col(dcc.Graph(id="rq3-hist-graph", figure=rq_hist(df, "ph", bins=40)), width=12),
+    className="mb-5",
+)
 
 ####Q5 Callback 
 from dash import Input, Output 
