@@ -105,6 +105,8 @@ target_rq3 = "Potability"
 
 # --- RQ3.1: Summary table (grouped descriptive statistics)
 summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
+summary_flat_rq3 = summary_tbl_rq3.stack().reset_index()
+summary_flat_rq3.columns = ["Potability", "Feature", "Stat", "Value"]
 
 text_rq3_1 = (
     "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
@@ -205,7 +207,7 @@ rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
 fig_rq3_3c = vis_rq3.rq_hist(df, "Solids", target=target_rq3, bins=40)
 rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 
-
+text_rq3_4 = "In conclusion, the differences between potable and non-potable water samples are subtle, with significant overlaps in distributions of pH, Hardness, and Solids."
 
 ####Q5
 title_rq5 = "RQ5: Which water quality parameter has the strongest predictive influence on potability?"
@@ -515,7 +517,7 @@ dbc.Row(
                 html.Label("Feature"),
                 dcc.Dropdown(
                     id="rq3-feature-dropdown",
-                    options=[{"label": c, "value": c} for c in cols],
+                    options=[{"label": c, "value": c} for c in cols_rq3],
                     value="ph",
                     clearable=False,
                 ),
