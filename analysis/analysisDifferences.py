@@ -113,16 +113,17 @@ def rq_outputs(df, cols=None, target="Potability"):
 # Run analysis
 # ----------------------------
 
-cols = ["ph", "Hardness", "Solids"]
+if __name__ == "__main__":
+    cols = ["ph", "Hardness", "Solids"]
 
-# remove directory before delivering
-df = dm.read_clean_general("data/water_potability.csv")
+    # remove directory before delivering
+    df = dm.read_clean_general("data/water_potability.csv")
 
-summary_tbl, figs = rq_outputs(df, cols)
+    summary_tbl, figs = rq_outputs(df, cols)
 
-print(summary_tbl) # prints the grouped descriptive stats table
+    print(summary_tbl) # print grouped statistics
 
-figs["box_all"].show()
-figs["hist_ph"].show()
-figs["hist_Hardness"].show()
-figs["hist_Solids"].show()
+    figs["box_all"].show()
+    figs["hist_ph"].show()
+    figs["hist_Hardness"].show()
+    figs["hist_Solids"].show()
