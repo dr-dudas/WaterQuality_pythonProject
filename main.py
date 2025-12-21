@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import dash
 from dash import dcc, html
+from dash import dash_table
 import dash_bootstrap_components as dbc
 
 ### Your modules
