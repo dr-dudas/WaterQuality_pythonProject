@@ -97,47 +97,6 @@ rq2_plot1_id = "Chloramines vs Potability boxplot"
 fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
 rq2_plot2_id = "Solids vs Potability boxplot"
 
-###Q3
-title_rq3 = "RQ3: Are there clear differences in pH, hardness, or solids between potable and non-potable water samples?"
-
-cols_rq3 = ["ph", "Hardness", "Solids"]
-target_rq3 = "Potability"
-
-# --- RQ3.1: Summary table (grouped descriptive statistics)
-summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
-summary_flat_rq3 = summary_tbl_rq3.stack().reset_index()
-summary_flat_rq3.columns = ["Potability", "Feature", "Stat", "Value"]
-
-text_rq3_1 = (
-    "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
-    "for pH, hardness, and solids between potable (1) and non-potable (0) water samples.\n\n"
-    f"{summary_tbl_rq3}"
-)
-
-# --- RQ3.2: Box plot (all features together)
-text_rq3_2 = (
-    "Next, we use a box plot to compare the distributions of pH, hardness, and solids across the two classes. "
-    "This helps us see median shifts, spread (IQR), and outliers between potable and non-potable samples."
-)
-
-fig_rq3_2 = rq_box(df, cols_rq3, target=target_rq3)
-rq3_plot3_2_id = "RQ3 Box plot: Feature distributions by potability"
-
-# --- RQ3.3: Histograms (feature-by-feature)
-text_rq3_3 = (
-    "Finally, we inspect overlay histograms for each feature. "
-    "These show how much the two classes overlap for each variable."
-)
-
-fig_rq3_3a = rq_hist(df, "ph", target=target_rq3, bins=40)
-rq3_plot3_3a_id = "RQ3 Histogram: pH by potability"
-
-fig_rq3_3b = rq_hist(df, "Hardness", target=target_rq3, bins=40)
-rq3_plot3_3b_id = "RQ3 Histogram: Hardness by potability"
-
-fig_rq3_3c = rq_hist(df, "Solids", target=target_rq3, bins=40)
-rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
-
 text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indicating no clear " \
             "distiction between potable and non-potable water based on Chloramines. Same can be said about " \
             "Solids and Potability box plot although non-potable water has a slightly wider spread and a " \
@@ -176,6 +135,8 @@ target_rq3 = "Potability"
 
 # --- RQ3.1: Summary table (grouped descriptive statistics)
 summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
+summary_flat_rq3 = summary_tbl_rq3.stack().reset_index()
+summary_flat_rq3.columns = ["Potability", "Feature", "Stat", "Value"]
 
 text_rq3_1 = (
     "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
