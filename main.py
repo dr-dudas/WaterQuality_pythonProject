@@ -383,6 +383,7 @@ app.layout = dbc.Container(
             dbc.Col(html.P(text_rq3_4, className="text-center lead"), width=12),
             className="mb-4"
         ),
+        
 # Controls row
 dbc.Row(
     [
@@ -416,13 +417,13 @@ dbc.Row(
         ),
     ],
     className="mb-4",
-)
+),
 
 # Histogram graph
 dbc.Row(
     dbc.Col(dcc.Graph(id="rq3-hist-graph", figure=vis_rq3.rq_hist(df, "ph", bins=40)), width=12),
     className="mb-5",
-)
+),
         
         # Research Question 5
 
