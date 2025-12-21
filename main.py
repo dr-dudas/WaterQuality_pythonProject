@@ -408,9 +408,9 @@ app.layout = dbc.Container(
 
         dbc.Row(
             [
-                dbc.Col(dcc.Graph(id=rq3_plot3_3_ph_id, figure=fig_rq3_3_ph), width=4),
-                dbc.Col(dcc.Graph(id=rq3_plot3_3_hardness_id, figure=fig_rq3_3_hardness), width=4),
-                dbc.Col(dcc.Graph(id=rq3_plot3_3_solids_id, figure=fig_rq3_3_solids), width=4),
+                dbc.Col(dcc.Graph(id=rq3_plot3_3a_id, figure=fig_rq3_3a), width=4),
+                dbc.Col(dcc.Graph(id=rq3_plot3_3b_id, figure=fig_rq3_3b), width=4),
+                dbc.Col(dcc.Graph(id=rq3_plot3_3c_id, figure=fig_rq3_3c), width=4),
             ],
             className="mb-5"
         ),
