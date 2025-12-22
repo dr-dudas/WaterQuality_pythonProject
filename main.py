@@ -136,8 +136,12 @@ target_rq3 = "Potability"
 
 # --- RQ3.1: Summary table (grouped descriptive statistics)
 summary_tbl_rq3 = vis_rq3.rq_summary(df, cols_rq3, target=target_rq3)
-summary_flat_rq3 = summary_tbl_rq3.stack().reset_index()
-summary_flat_rq3.columns = ["Potability", "Feature", "Stat", "Value"]
+summary_flat_rq3 = (
+    summary_tbl_rq3
+    .stack(future_stack=True)
+    .reset_index()
+    .rename(columns={0: "Value"})
+)
 
 text_rq3_1 = (
     "We start by comparing grouped descriptive statistics (count, mean, std, min, quartiles, max) "
