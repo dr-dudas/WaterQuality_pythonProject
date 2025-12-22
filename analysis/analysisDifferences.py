@@ -122,8 +122,3 @@ if __name__ == "__main__":
     summary_tbl, figs = rq_outputs(df, cols)
 
     print(summary_tbl) # print grouped statistics
-
-    figs["box_all"].show()
-    figs["hist_ph"].show()
-    figs["hist_Hardness"].show()
-    figs["hist_Solids"].show()
