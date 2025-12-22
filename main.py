@@ -24,7 +24,7 @@ import analysis.data_modelling as dm # loading in your data_modeling.py
 import analysis.analysisMissingValues as vis_rq1 # loading in analysisMissingValues - individual analysis module
 import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
 import analysis.analysisDifferences as vis_rq3 # loading in analysisDifference - individual analysis module
-#import analysis.analysis_rq4 as vis_rq4 # loading in your individual analysis module
+import analysis.analysisPotabilityValidation as vis_rq4 # loading in your individual analysis module
 import analysis.analysisInfluence as vis_rq5 # loading in your individual analysis module
 
 
@@ -174,6 +174,26 @@ fig_rq3_3c = vis_rq3.rq_hist(df, "Solids", target=target_rq3, bins=40)
 rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 
 text_rq3_4 = "In conclusion, the differences between potable and non-potable water samples are subtle, with significant overlaps in distributions of pH, Hardness, and Solids."
+
+####Q4
+
+title_rq4 = (
+    "RQ4: Does the potability label accurately indicate water safety, "
+    "or are some samples with unsafe values marked as potable?"
+)
+
+text_rq4 = (
+    "This analysis focuses on validating the potability label by examining whether "
+    "water samples classified as potable (1) still exhibit unusually high values of "
+    "Total Dissolved Solids (TDS) or Turbidity. "
+    "High values in these parameters may indicate potential water safety concerns "
+    "despite the potable classification."
+)
+
+# Call your analysis function
+fig_rq4_1, fig_rq4_2, fig_rq4_3 = vis_rq4.run_analysis(df)
+rq4_plot_id = "rq4-potability-validation"
+
 
 ####Q5
 title_rq5 = "RQ5: Which water quality parameter has the strongest predictive influence on potability?"
@@ -430,6 +450,28 @@ app.layout = dbc.Container(
             className="mb-5"
         ),
         
+        # Research Question 4
+
+         dbc.Row(
+            dbc.Col(html.H3(title_rq4, className="text-center text-primary"), width=12),
+            className="mb-3"
+        ),
+
+        dbc.Row(
+            dbc.Col(html.P(text_rq4, className="text-center lead"), width=12),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            [
+                dbc.Col(dcc.Graph(id="rq4-safe-unsafe", figure=fig_rq4_1), width=4),
+                dbc.Col(dcc.Graph(id="rq4-tds", figure=fig_rq4_2), width=4),
+                dbc.Col(dcc.Graph(id="rq4-turbidity", figure=fig_rq4_3), width=4),
+            ],
+            className="mb-5"
+        ),
+
+
         # Research Question 5
 
         dbc.Row(
