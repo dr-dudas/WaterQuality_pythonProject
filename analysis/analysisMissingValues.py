@@ -19,34 +19,37 @@ import plotly.express as px
 # Function to visualize missing data using a heatmap
 def missing_values_heatmap(df: pd.DataFrame):
     """
-    Function to create a heatmap showing missing values
-    
+    Heatmap showing missing values (binary: missing vs present)
+
     :param df: Dataframe
     :type df: pd.DataFrame
     :requires: plotly.express as px
-    :return: Heatmap showing missing values in the dataframe
-
+    :return: Heatmap showing missing values as black lines in the dataframe
     """
-    # Boolean missing matrix
-    missing = df.isna()
+    # Encode missing as 1, present as 0
+    missing = df.isna().astype(int)
 
     fig = px.imshow(
         missing,
         labels=dict(
             x="Feature",
             y="Sample index",
-            color="Missing"
+            color="Missing value"
         ),
-        color_continuous_scale=["white", "black"]
+        color_continuous_scale=[
+            [0, "white"],   # present
+            [1, "black"]    # missing
+        ]
     )
 
+    # Remove numeric color scale
     fig.update_layout(
-        title="Missing Values Overview",
-        height=400
+        title="Missing values heatmap - black indicates missing value",
+        height=400,
+        coloraxis_showscale=False
     )
+
     return fig
-
-
 
 # Function to compare distributions of selected columns by target variable
 # In the main.py we will call this function to see how 'ph', 'Sulfate', and 'Trihalomethanes' relate to 'Potability'.
@@ -148,7 +151,7 @@ def plot_percentages(percent: pd.DataFrame):
         y="Proportion",
         color="Potability",
         barmode="stack",
-        title="Potability Proportion by Number of Missing Values"
+        title="Potability Proportion by number of missing values for each sample"
     )
     # Format y-axis as percentage
     fig.update_yaxes(

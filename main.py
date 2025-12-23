@@ -29,23 +29,21 @@ import analysis.analysisInfluence as vis_rq5 # loading in your individual analys
 
 
 # load in the dataset
-# in our example, we use the Netflix dataset
-df = dm.basic_cleaning("data/water_potability.csv")
-df_rq2 = dm.read_clean_general("data/water_potability.csv")
+df_bc = dm.basic_cleaning("data/water_potability.csv")
 df = dm.read_clean_general("data/water_potability.csv")
 
-# call visualizations
-# This is your individual work, each one of you will have different figures
-# REPLACE BY YOUR OWN FIGURES AND TEXTS
+# Visualization calls and texts for each research question
+### RQ1
 title_rq1 = "RQ1: How do missing values and data quality issues affect the reliability of potability predictions?"
 text_rq1_1 = text_rq1_1 = (
-    "This analysis explores the frequency missing values and explore those parameters "
+    "This analysis explores the frequency of missing values and explore those parameters "
     "and frequenzy compared to the potability of water.\n"
-    "Let's start by checking for missing values in each column:\n\n"
-    f"{dm.missing_values_summary(df)}"
+    "Let's start by checking for missing values in each column:\n"
 )
+mv_df = dm.missing_values_summary(df_bc).reset_index()
+mv_df.columns = ["Feature", "Missing values"]
 
-fig_rq1_1 = vis_rq1.missing_values_heatmap(df)
+fig_rq1_1 = vis_rq1.missing_values_heatmap(df_bc)
 rq1_plot1_1_id = "Missing values heatmap"
 ###
 text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'Sulfate', and 'Trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
@@ -55,7 +53,7 @@ new_col = 'missing_value'
 ph = "ph"
 sulfate = "Sulfate"
 trih = "Trihalomethanes"
-fig_rq1_2 = vis_rq1.compare_distributions(df, col_missing_values, target)
+fig_rq1_2 = vis_rq1.compare_distributions(df_bc, col_missing_values, target)
 rq1_plot1_2_id = "Distributions of columns with missing values vs potability"
 
 ###
@@ -68,14 +66,14 @@ text_rq1_3 = (
     "Does 1 or more missing values in a row correlate with potability?\n"
     "Let's compute and plot the percentage of potability for each count of missing values."
 )
-fig_rq1_3 = vis_rq1.plot_percentages(vis_rq1.compute_percentages(df, new_col, target))
+fig_rq1_3 = vis_rq1.plot_percentages(vis_rq1.compute_percentages(df_bc, new_col, target))
 rq1_plot1_3_id = "Percentage of Potability vs Missing Values"
 ###
 text_rq1_4 = (
     "The stacked bar chart shows the percentage of potable and non-potable water samples for each "
     "count of missing values.\n "
     "We can see that as the number of missing values increases, the average potability tends to decrease, but the trend is not very strong.\n"
-    "First when we have 3 missing values do we see a significant drop in potability - but the amount of data on those are low."
+    "First when we have 3 missing values do we see a significant drop in potability - but the amount of data on those are low. "
     "We conclude that the missing values of ph, Sulfate, and Trihalomethanes have very limited correlation with the potability of water samples."
 )
 
@@ -86,16 +84,16 @@ text_rq2 = (
     "between the potability of the water and the rest of the parameters measured. \n" \
     "\n For starters, we've created a correlation heatmap function, shown below"
 )
-fig_rq2_0 = dm.correlation_heatmap(df_rq2)
+fig_rq2_0 = dm.correlation_heatmap(df)
 
 text_rq2_2 = "Given our correlation heatmap, we can see that hardly any other parameter" \
             "correlate with Potability but just to be sure, we'll select the parameters with the highest" \
             "correlation values to see whether or not this is true. \n" \
             "Those parameters are - Solids and Chloramines - and we'll show the relationship with Potability through \n" \
             "box plots, density plots and lastly, a logistics regression." 
-fig_rq2_1 = vis_rq2.boxplot_chloramines(df_rq2)  # YOUR CODE
+fig_rq2_1 = vis_rq2.boxplot_chloramines(df)  # YOUR CODE
 rq2_plot1_id = "Chloramines vs Potability boxplot"
-fig_rq2_2 = vis_rq2.boxplot_solids(df_rq2)
+fig_rq2_2 = vis_rq2.boxplot_solids(df)
 rq2_plot2_id = "Solids vs Potability boxplot"
 
 text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indicating no clear " \
@@ -105,16 +103,16 @@ text_rq2_3 = "The box plot for Chloramines and Potability shows overlapping indi
             "Solids and Chloramines"
 
 text_rq2_4 = "Density plots"
-fig_rq2_3 = vis_rq2.densityplot_chloramines(df_rq2)
-rq2_plot3_id = "Solids vs Potability density plot"
-fig_rq2_4 = vis_rq2.densityplot_solids(df_rq2)
+fig_rq2_3 = vis_rq2.densityplot_chloramines(df)
+rq2_plot3_id = "Chloramines vs Potability density plot"
+fig_rq2_4 = vis_rq2.densityplot_solids(df)
 rq2_plot4_id = "Solids vs Potability density plot"
 
 text_rq2_5 = "Logistics regression"
-fig_rq2_5 = vis_rq2.logRegression(df_rq2)[0]
+fig_rq2_5 = vis_rq2.logRegression(df)[0]
 rq2_plot5_id = "Confusion matrix"
 text_rq2_6 = "Accuracy value obtained from the logistics regression calculation: " \
-            f"{vis_rq2.logRegression(df_rq2)[1]} \n" \
+            f"{vis_rq2.logRegression(df)[1]} \n" \
             "Using the box plots, we argued that there was no strong relationship between Potability, Solids, " \
             "and Chloramines, and now regarding the density plots we can see that the density curves both for Solids " \
             "and Chloramines in potable and non-potable water are nearly identical, which suggests they alone do " \
@@ -205,13 +203,13 @@ text_rq5 = (
     "correlation strength."
 )
 
-corr_rq5 = vis_rq5.compute_potability_correlations(df_rq2)
+corr_rq5 = vis_rq5.compute_potability_correlations(df)
 fig_rq5 = vis_rq5.plot_potability_correlation_bar(corr_rq5)
 
 rq5_plot_id = "rq5-correlation-bar"
 ###
 # Dropdown options = all numeric columns except Potability
-rq5_params = [c for c in df_rq2.select_dtypes(include="number").columns if c != "Potability"]
+rq5_params = [c for c in df.select_dtypes(include="number").columns if c != "Potability"]
 rq5_default_param = rq5_params[0] if rq5_params else None
 
 ####
@@ -247,8 +245,24 @@ app.layout = dbc.Container(
                 className="text-center lead"), width=12),
             className="mb-4"
         ),
+        # Summary table
         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=8),
+            dbc.Col(
+                dash_table.DataTable(
+                    data=mv_df.to_dict("records"),
+                    columns=[{"name": c, "id": c} for c in mv_df.columns],
+                    page_size=12,
+                    style_table={"overflowX": "auto"},
+                    style_cell={"fontSize": 13, "padding": "6px"},
+                    style_header={"fontWeight": "bold"},
+                ),
+                width=6,
+                className="mx-auto"
+            ),
+            className="mb-5"
+        ),
+        dbc.Row(
+            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=6, className="mx-auto"),
             className="mb-5"
         
         ),
@@ -286,7 +300,7 @@ app.layout = dbc.Container(
             className="mb-4"
         ),
         dbc.Row(
-            dbc.Col(dcc.Graph(id=rq1_plot1_3_id, figure=fig_rq1_3), width=12),
+            dbc.Col(dcc.Graph(id=rq1_plot1_3_id, figure=fig_rq1_3), width=6, className="mx-auto"),
             className="mb-5"
         
         ),
@@ -569,7 +583,7 @@ from dash import Input, Output
 def update_rq5_distribution(selected_param):
     # Create the boxplot dynamically based on dropdown selection
     fig = px.box(
-        df_rq2,
+        df,
         x="Potability",
         y=selected_param,
         points="all",
