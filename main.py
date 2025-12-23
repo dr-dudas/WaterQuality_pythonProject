@@ -247,6 +247,7 @@ app.layout = dbc.Container(
         ),
         # Summary table
         dbc.Row(
+            [
             dbc.Col(
                 dash_table.DataTable(
                     data=mv_df.to_dict("records"),
@@ -256,16 +257,14 @@ app.layout = dbc.Container(
                     style_cell={"fontSize": 13, "padding": "6px"},
                     style_header={"fontWeight": "bold"},
                 ),
-                width=6,
-                className="mx-auto"
+                width=5,
             ),
+            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=5, className="mx-auto"
+            ),
+            ],
             className="mb-5"
         ),
-        dbc.Row(
-            dbc.Col(dcc.Graph(id=rq1_plot1_1_id, figure=fig_rq1_1), width=6, className="mx-auto"),
-            className="mb-5"
         
-        ),
         # Additional text and plots for RQ1
          dbc.Row(
             dbc.Col(html.P(
