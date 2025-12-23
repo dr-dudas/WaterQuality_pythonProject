@@ -207,10 +207,24 @@ corr_rq5 = vis_rq5.compute_potability_correlations(df)
 fig_rq5 = vis_rq5.plot_potability_correlation_bar(corr_rq5)
 
 rq5_plot_id = "rq5-correlation-bar"
+
 ###
 # Dropdown options = all numeric columns except Potability
 rq5_params = [c for c in df.select_dtypes(include="number").columns if c != "Potability"]
 rq5_default_param = rq5_params[0] if rq5_params else None
+
+
+text_rq5_conclusion = ("From the correlation analysis, we observe that certain parameters such as "
+    "Solids and Chloramines exhibit stronger correlations with Potability compared "
+    "to others. However, all correlation values are relatively low, indicating that "
+    "no single parameter alone is sufficient to determine potability. This suggests "
+    "that water quality depends on multiple factors acting together, rather than one dominant variable."
+)
+
+text_rq5_conclusion1 = (
+    "The overlapping distributions between potable and non-potable samples indicate that individual parameters,"
+    "including the strongest one, are not sufficient for clear separation of water safety."
+)
 
 ####
 # Placeholder for more research questions
@@ -486,7 +500,7 @@ app.layout = dbc.Container(
 
 
         # Research Question 5
-
+        ###Bar plot
         dbc.Row(
             dbc.Col(html.H3(title_rq5,
                             className="text-center text-primary"), width=12),
@@ -498,10 +512,25 @@ app.layout = dbc.Container(
                 className="text-center lead"), width=12),
             className="mb-4"
         ),
+
+       ###Distribution plot
         dbc.Row(
             dbc.Col(dcc.Graph(id=rq5_plot_id, figure=fig_rq5), width=12),
             className="mb-5"
         ),
+        
+
+        ###Conclusion text 1
+        dbc.Row(
+            dbc.Col(html.P(
+                text_rq5_conclusion,
+                className="text-center lead"), width=12),
+            className="mb-4",
+            justify="center",
+        ),
+
+
+
        ### Dropdown to choose parameter
         dbc.Row(
             dbc.Col(
@@ -528,6 +557,14 @@ app.layout = dbc.Container(
         ),
 
 
+        ###Conclusion text 2
+        dbc.Row(
+            dbc.Col(html.P(
+                text_rq5_conclusion1,
+                className="text-center lead"), width=12),
+            className="mb-4",
+            justify="center",
+        ),
         ####
 
 
