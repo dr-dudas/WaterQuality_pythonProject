@@ -533,6 +533,14 @@ app.layout = dbc.Container(
 
        ### Dropdown to choose parameter
         dbc.Row(
+            [                    
+                dbc.Col(
+                    html.Label( 
+                       "Select Water Quality Parameter:",
+                        style={"fontWeight": "bold", "paddingTop": "10px"},
+                ),
+                width="auto"
+             ),
             dbc.Col(
                 dcc.Dropdown(
                     id="rq5-parameter-dropdown",
@@ -540,11 +548,12 @@ app.layout = dbc.Container(
                     value=rq5_default_param,
                     clearable=False,
                 ),
-                width=6
-          ),
-        
-          className="mb-3",
-          justify="center",
+                width=2,
+              ),
+
+            ],
+            className="mb-3",
+            justify="center",
         
         ),
 

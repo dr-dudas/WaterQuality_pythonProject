@@ -9,7 +9,6 @@ Research Question (5):
 
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
 
 
 # 1. COMPUTE CORRELATIONS WITH POTABILITY
