@@ -174,22 +174,53 @@ rq3_plot3_3c_id = "RQ3 Histogram: Solids by potability"
 text_rq3_4 = "In conclusion, the differences between potable and non-potable water samples are subtle, with significant overlaps in distributions of pH, Hardness, and Solids."
 
 ####Q4
-
 title_rq4 = (
-    "RQ4: Does the potability label accurately indicate water safety, "
-    "or are some samples with unsafe values marked as potable?"
+    "RQ4: To what extent do potable water samples exceed safety limits "
+    "for key water quality parameters?"
 )
+
+# --- RQ4 Sub-question texts ---
+
+text_rq4_1 = (
+    "RQ4.1: Among samples labeled as potable, how many exceed established "
+    "water safety thresholds? This step quantifies the extent of unsafe "
+    "conditions within potable water samples."
+)
+
+text_rq4_2 = (
+    "RQ4.2: Which water quality parameter contributes most to potable samples "
+    "exceeding safety limits? We focus on Total Dissolved Solids (TDS) to examine "
+    "whether high concentrations occur even when water is labeled as potable."
+)
+
+
+text_rq4_3 = (
+    "RQ4.3: Do potable and non-potable samples overlap in unsafe value ranges? "
+    "This comparison helps assess whether safety thresholds clearly distinguish "
+    "between potable and non-potable water."
+)
+
 
 text_rq4 = (
-    "This analysis focuses on validating the potability label by examining whether "
-    "water samples classified as potable (1) still exhibit unusually high values of "
-    "Total Dissolved Solids (TDS) or Turbidity. "
-    "High values in these parameters may indicate potential water safety concerns "
-    "despite the potable classification."
+    "This analysis examines the extent to which water samples labeled as potable "
+    "exceed established safety limits for key water quality parameters. "
+    "Specifically, we evaluate Total Dissolved Solids (TDS) and Turbidity to "
+    "identify how often potable samples still fall outside recommended thresholds."
 )
 
+
+text_rq4_conclusion = (
+    "In conclusion, the analysis shows that a measurable proportion of water samples "
+    "labeled as potable exceed established safety limits for key parameters such as "
+    "Total Dissolved Solids and Turbidity. This demonstrates that potability labels "
+    "do not always fully reflect compliance with individual safety thresholds, and "
+    "that parameter-level evaluation is necessary for a more accurate assessment "
+    "of water safety."
+)
+
+
 # Call your analysis function
-fig_rq4_1, fig_rq4_2, fig_rq4_3 = vis_rq4.run_analysis(df)
+fig_rq4_1, fig_rq4_2, fig_rq4_3, fig_rq4_4 = vis_rq4.run_analysis(df)
 rq4_plot_id = "rq4-potability-validation"
 
 
@@ -477,24 +508,100 @@ app.layout = dbc.Container(
             className="mb-5"
         ),
         
+        # ================================
         # Research Question 4
-
-         dbc.Row(
-            dbc.Col(html.H3(title_rq4, className="text-center text-primary"), width=12),
-            className="mb-3"
-        ),
+        # ================================
 
         dbc.Row(
-            dbc.Col(html.P(text_rq4, className="text-center lead"), width=12),
+            dbc.Col(
+                html.H2(title_rq4, className="text-center text-primary mb-4"),
+                width=12
+            )
+        ),
+
+        # --- RQ4.1 ---
+        dbc.Row(
+            dbc.Col(
+                html.P(text_rq4_1, className="text-center lead"),
+                width=12
+            ),
             className="mb-4"
         ),
 
         dbc.Row(
-            [
-                dbc.Col(dcc.Graph(id="rq4-safe-unsafe", figure=fig_rq4_1), width=4),
-                dbc.Col(dcc.Graph(id="rq4-tds", figure=fig_rq4_2), width=4),
-                dbc.Col(dcc.Graph(id="rq4-turbidity", figure=fig_rq4_3), width=4),
-            ],
+            dbc.Col(
+                dcc.Graph(id="rq4-safe-unsafe", figure=fig_rq4_1),
+                width=6
+            ),
+            className="mb-5",
+            justify="center"
+        ),
+
+        # --- RQ4.1b (NEW: Parameter contribution) ---
+        dbc.Row(
+            dbc.Col(
+                html.P(
+            "RQ4.1b: Which water quality parameter contributes most to potable samples "
+            "exceeding safety limits? This analysis compares exceedances caused by "
+            "Total Dissolved Solids (TDS) and Turbidity.",
+            className="text-center lead"
+        ),
+        width=12
+            ),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Graph(id="rq4-parameter-exceedance", figure=fig_rq4_4),
+                width=6
+            ),
+            className="mb-5",
+            justify="center"
+        ),
+
+        # --- RQ4.2 ---
+        dbc.Row(
+            dbc.Col(
+                html.P(text_rq4_2, className="text-center lead"),
+                width=12
+            ),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Graph(id="rq4-tds", figure=fig_rq4_2),
+                width=6
+            ),
+            className="mb-5",
+            justify="center"
+        ),
+
+        # --- RQ4.3 ---
+        dbc.Row(
+            dbc.Col(
+                html.P(text_rq4_3, className="text-center lead"),
+                width=12
+            ),
+            className="mb-4"
+        ),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Graph(id="rq4-turbidity", figure=fig_rq4_3),
+                width=6
+            ),
+            className="mb-5",
+            justify="center"
+        ),
+
+        # --- Conclusion ---
+        dbc.Row(
+            dbc.Col(
+                html.P(text_rq4_conclusion, className="text-center lead"),
+                width=12
+            ),
             className="mb-5"
         ),
 
