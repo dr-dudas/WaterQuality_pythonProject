@@ -4,13 +4,12 @@
 ##################################################
 ##################################################
 
-###### WORK IN PROGRESS ####
+
 ###### main.py ######
 
 
-### This is for the group work, collaborative part of your final project
-### This is just a template, feel free to modify the layout, and look and feel as needed
 
+### Import necessary libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
@@ -19,44 +18,53 @@ from dash import dcc, html
 from dash import dash_table
 import dash_bootstrap_components as dbc
 
-### Your modules
-import analysis.data_modelling as dm # loading in your data_modeling.py
-import analysis.analysisMissingValues as vis_rq1 # loading in analysisMissingValues - individual analysis module
-import analysis.analysisPotability as vis_rq2 # loading in analysisPotability - individual analysis module
-import analysis.analysisDifferences as vis_rq3 # loading in analysisDifference - individual analysis module
-import analysis.analysisPotabilityValidation as vis_rq4 # loading in your individual analysis module
-import analysis.analysisInfluence as vis_rq5 # loading in your individual analysis module
+### Our data modelling and analysis modules
+import analysis.data_modelling as dm # Utility functions for cleaning and modelling
+import analysis.analysisMissingValues as vis_rq1 # RQ1: Missing values analysis/plot
+import analysis.analysisPotability as vis_rq2 # RQ2: Potability analysis/plot
+import analysis.analysisDifferences as vis_rq3 # RQ3: Differences analysis/plot
+import analysis.analysisPotabilityValidation as vis_rq4 # RQ4: Potability validation analysis/plot
+import analysis.analysisInfluence as vis_rq5 # RQ5: Influence analysis/plot
 
 
-# load in the dataset
-df_bc = dm.basic_cleaning("data/water_potability.csv")
-df = dm.read_clean_general("data/water_potability.csv")
+### Load and clean data
+df_bc = dm.basic_cleaning("data/water_potability.csv")  # Basic cleaning - keeping NaNs
+df = dm.read_clean_general("data/water_potability.csv") # Full cleaning - no NaNs
 
-# Visualization calls and texts for each research question
-### RQ1
+
+### RQ1: Missing values analysis
 title_rq1 = "RQ1: How do missing values and data quality issues affect the reliability of potability predictions?"
-text_rq1_1 = text_rq1_1 = (
+
+text_rq1_1 = (
     "This analysis explores the frequency of missing values and explore those parameters "
-    "and frequenzy compared to the potability of water.\n"
+    "and frequency compared to the potability of water.\n"
     "Let's start by checking for missing values in each column:\n"
 )
+# Summary table of missing values
 mv_df = dm.missing_values_summary(df_bc).reset_index()
 mv_df.columns = ["Feature", "Missing values"]
 
+# Heatmap of missing values across the dataset
 fig_rq1_1 = vis_rq1.missing_values_heatmap(df_bc)
 rq1_plot1_1_id = "Missing values heatmap"
-###
-text_rq1_2 = "It's clear from the heatmap that missing values of 'ph', 'Sulfate', and 'Trihalomethanes' are scattered throughout the dataset. \nLet's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
-target = 'Potability'
-col_missing_values = ['ph', 'Sulfate', 'Trihalomethanes']
-new_col = 'missing_value'
+
+
+text_rq1_2 = ("It's clear from the heatmap that missing values of 'ph', 'Sulfate', and 'Trihalomethanes' are scattered throughout the dataset.\n"
+"Let's analyze the distribution of these columns with missing values and see how they relate to the target variable 'Potability'."
+)
+
+# Variables for plotting
+target = 'Potability' # Target variable
+col_missing_values = ['ph', 'Sulfate', 'Trihalomethanes'] # Columns with missing values
+new_col = 'missing_value' # New column indicating count of missing values per row
 ph = "ph"
 sulfate = "Sulfate"
 trih = "Trihalomethanes"
+
+# Distribution plots for columns with missing values
 fig_rq1_2 = vis_rq1.compare_distributions(df_bc, col_missing_values, target)
 rq1_plot1_2_id = "Distributions of columns with missing values vs potability"
 
-###
 text_rq1_3 = (
     "From the distributions in the histograms, we observe that the missing values in 'ph', 'Sulfate', and 'Trihalomethanes' "
     "do not show a strong bias towards either class of 'Potability'.\n"
@@ -66,9 +74,11 @@ text_rq1_3 = (
     "Does 1 or more missing values in a row correlate with potability?\n"
     "Let's compute and plot the percentage of potability for each count of missing values."
 )
+
+# Percentage of potability vs count of missing values plot
 fig_rq1_3 = vis_rq1.plot_percentages(vis_rq1.compute_percentages(df_bc, new_col, target))
 rq1_plot1_3_id = "Percentage of Potability vs Missing Values"
-###
+
 text_rq1_4 = (
     "The stacked bar chart shows the percentage of potable and non-potable water samples for each "
     "count of missing values.\n "
@@ -77,7 +87,7 @@ text_rq1_4 = (
     "We conclude that the missing values of ph, Sulfate, and Trihalomethanes have very limited correlation with the potability of water samples."
 )
 
-
+### RQ2: Potability analysis
 title_rq2 = "RQ2: How can we correlate the Potability of water with the rest of the parameters?"
 text_rq2 = (
     "The purpose of this research question is to find if there is any correlation" \

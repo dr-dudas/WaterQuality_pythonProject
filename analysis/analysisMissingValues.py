@@ -1,8 +1,4 @@
 ##################################################
-##################################################
-######### Water Quality Data Analysis ############
-##################################################
-##################################################
 ########### Missing Values Analysis ##############
 ##################################################
 
@@ -10,8 +6,6 @@
 from analysis import data_modelling as dm
 import pandas as pd
 import plotly.express as px
-
-##################################################
 
 ### RQ - How do missing values and data quality issues affect the reliability of potability predictions?
 
@@ -21,6 +15,8 @@ def missing_values_heatmap(df: pd.DataFrame):
     """
     Heatmap showing missing values (binary: missing vs present)
 
+    Missing values are encoded as black lines in the dataframe.
+    
     :param df: Dataframe
     :type df: pd.DataFrame
     :requires: plotly.express as px
@@ -42,7 +38,7 @@ def missing_values_heatmap(df: pd.DataFrame):
         ]
     )
 
-    # Remove numeric color scale
+    # Remove the continuous color scale
     fig.update_layout(
         title="Missing values heatmap - black indicates missing value",
         height=400,
@@ -53,14 +49,17 @@ def missing_values_heatmap(df: pd.DataFrame):
 
 # Function to compare distributions of selected columns by target variable
 # In the main.py we will call this function to see how 'ph', 'Sulfate', and 'Trihalomethanes' relate to 'Potability'.
-def compare_distributions(df, cols, target):
+def compare_distributions(df: pd.DataFrame, cols: list[str], target: str) -> dict:
     """
-    Compare distributions of selected columns by target variable
+    Compare distributions of selected features by target variable
     
+    Produces a dict of figures.
+    Each figure is a histogram.
+
     :param df: Dataframe
     :type df: pd.DataFrame
     :param cols: List of columns to compare
-    :type cols: list
+    :type cols: list[str]
     :param target: Target variable for comparison
     :type target: str
     :return: returns a dictionary of figures (one per column)
@@ -88,12 +87,15 @@ def compare_distributions(df, cols, target):
 
 # Function to group values by specified column and target variable
 # Used in compute_percentages function below 
-def grouped_values(df: pd.DataFrame, col: str, target: str):
+def grouped_values(df: pd.DataFrame, col: str, target: str) -> pd.DataFrame:
     """
     Groups the dataframe by the specified column and target variable, counting occurrences.
     
-    Eg. for each value in 'col', counts how many times each value of 'target' occurs.
-    Eg2. col = 'missing_value', target = 'Potability'    
+    Example
+    -------
+    If col="missing_value" and target="Potability", the output counts how many
+    Potability=0 and Potability=1 rows exist for each missing_value count.
+    
     Used in compute_percentages function.
 
     param df: Dataframe
@@ -112,14 +114,20 @@ def grouped_values(df: pd.DataFrame, col: str, target: str):
 # Compute percentages for each missing value count group
 def compute_percentages(df: pd.DataFrame, col: str, target: str) -> pd.DataFrame:
     """
-    Takes the dataframe and creates a grouped dataframe counting potability for each missing value count,
-    then computes the percentage of each target variable.
+    Compute potability proportions for each missing-value count group.
+
+    This function:
+      1) adds the missing-value count column using dm.add_missing_value_column(df)
+      2) groups by (missing count, target) using grouped_values(df, col, target)
+      3) converts counts to row-wise proportions (0–1)
 
     param df: Dataframe
     type df: pd.DataFrame
     returns: pd.DataFrame: Dataframe with percentages of target variable for each group.
     """
+    # Get grouped counts
     grouped = grouped_values(dm.add_missing_value_column(df), col, target)
+    # Convert counts to proportions per missing-value count
     percent = grouped.div(grouped.sum(axis=1), axis=0)
     
     return percent
@@ -128,14 +136,14 @@ def compute_percentages(df: pd.DataFrame, col: str, target: str) -> pd.DataFrame
 # Visualize the percentages using a stacked bar chart
 def plot_percentages(percent: pd.DataFrame):
     """
-    Plot stacked bar chart of potability percentages by missing-value count.
+    Plot stacked bar chart of Potability percentages by missing-value count.
 
-    Expects `percent` in the format returned by compute_percentages():
-      - index: missing-value count (e.g., 0,1,2,3)
-      - columns: potability classes (e.g., 0,1)
-      - values: proportions (0-1) OR percentages (0-100)
+    Expects 'percent' in the format returned by compute_percentages():
+      - index: missing-value count (e.g., 0, 1, 2, 3)
+      - columns: target classes (e.g., 0 and 1)
+      - values: proportions [0-1]
     """
-    # Reset index for plotting
+    # Reset index so the missing-value count becomes a plotting column
     df_plot = percent.reset_index() 
 
     # Melt the dataframe for plotly
